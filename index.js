@@ -1,16 +1,13 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-app.use(express.json());
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 
-app.post('/multiply', (req, res) => {
-  const { a, b } = req.body;
-  if (typeof a !== 'number' || typeof b !== 'number') {
-    return res.status(400).json({ error: 'Both a and b must be numbers' });
-  }
-  const result = a * b;
-  res.json({ result });
+app.use((_req, res) => {
+  res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Route not found' } });
 });
 
 app.listen(port, () => {
